@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma.service'
 import { AuthDto } from './dto/auth.dto'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
+import { verify } from 'argon2'
 
 @Injectable()
 export class AuthService {
@@ -58,8 +59,10 @@ export class AuthService {
 
   private async validate(dto: AuthDto) {
     const user = await this.userService.getByEmail(dto.email)
-
     if (!user) throw new NotFoundException('User not found')
+
+    const isPasswordValid = await verify(user.password, dto.password)
+    if (!isPasswordValid) throw new UnauthorizedException('Invalid credentials')
 
     return user
   }
@@ -87,13 +90,10 @@ export class AuthService {
   }
 
   addRefreshToken(res: Response, refreshToken: string) {
-    const expiresIn = new Date()
-    expiresIn.setDate(expiresIn.getDate() + 15)
-
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       domain: this.configService.get('SERVER_DOMAIN'),
-      expires: expiresIn,
+      expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       secure: true,
       sameSite: 'lax'
     })
