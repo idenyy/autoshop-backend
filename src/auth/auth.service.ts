@@ -62,7 +62,7 @@ export class AuthService {
     if (!user) throw new NotFoundException('User not found')
 
     const isPasswordValid = await verify(user.password, dto.password)
-    if (!isPasswordValid) throw new UnauthorizedException('Invalid credentials')
+    if (!isPasswordValid) throw new BadRequestException('Invalid credentials')
 
     return user
   }
