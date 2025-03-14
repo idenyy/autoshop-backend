@@ -123,14 +123,7 @@ export class ProductService {
 
   async create(dto: ProductDto) {
     return this.prisma.product.create({
-      data: {
-        title: dto.title,
-        description: dto.description,
-        price: dto.price,
-        images: dto.images,
-        categoryId: dto.categoryId,
-        supplierId: dto.supplierId
-      }
+      data: dto
     })
   }
 
