@@ -105,6 +105,9 @@ model Order {
 
   items OrderItem[]
 
+  paymentIntentId String? @unique @map("payment_intent_id")
+  paymentStatus   String? @map("payment_status")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
