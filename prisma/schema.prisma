@@ -130,7 +130,6 @@ model OrderItem {
 
 enum Role {
   MANAGER
-  EMPLOYEE
   CLIENT
 }
 
